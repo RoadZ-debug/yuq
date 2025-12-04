@@ -1,0 +1,438 @@
+<html lang="zh-CN">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   数据要素管理平台 - 登录
+  </title>
+  <script src="https://res.gemcoder.com/js/reload.js">
+  </script>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.4.3/echarts.min.js">
+  </script>
+  <script>
+   tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#165DFF',
+        secondary: '#0E42D2',
+        tertiary: '#36BFFA',
+        neutral: '#F5F7FA',
+        'neutral-dark': '#E5E6EB',
+        'text-primary': '#1D2129',
+        'text-secondary': '#4E5969',
+        'text-tertiary': '#86909C'
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif']
+      },
+      boxShadow: {
+        'card': '0 4px 20px rgba(0, 0, 0, 0.08)',
+        'card-hover': '0 8px 30px rgba(0, 0, 0, 0.12)'
+      }
+    }
+  }
+};
+  </script>
+  <style type="text/tailwindcss">
+   @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .bg-grid {
+                background-size: 20px 20px;
+                background-image: 
+                    linear-gradient(to right, rgba(22, 93, 255, 0.05) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(22, 93, 255, 0.05) 1px, transparent 1px);
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .material-border {
+                border: 1px solid rgba(22, 93, 255, 0.15);
+                backdrop-filter: blur(10px);
+            }
+            .input-focus {
+                @apply border-primary ring-2 ring-primary/20;
+            }
+            .btn-hover {
+                @apply transform transition-all duration-300 hover:scale-[1.02] active:scale-[0.98];
+            }
+        }
+  </style>
+ </head>
+ <body class="min-h-screen bg-gradient-to-br from-neutral to-white font-sans text-text-primary overflow-x-hidden">
+  <!-- [MODULE] a7g_登录页面整体布局 -->
+<div class="flex flex-col min-h-screen">
+   <!-- [MODULE] f9g_右侧登录表单区域 -->
+<div class="w-full flex items-center justify-center p-6 md:p-12 bg-white relative">
+    <!-- 装饰背景 -->
+    <div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -mr-32 -mt-32">
+    </div>
+    <div class="absolute bottom-0 left-0 w-96 h-96 bg-tertiary/5 rounded-full -ml-48 -mb-48">
+    </div>
+    <!-- 登录卡片 -->
+    <div class="w-full max-w-md relative z-10">
+     <!-- [MODULE] g1h_移动端头部 -->
+     <div class="md:hidden flex items-center space-x-3 mb-8">
+      <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+       <i class="fas fa-shield-alt text-white text-xl">
+       </i>
+      </div>
+      <h1 class="text-2xl font-bold text-primary">
+       数据要素管理平台
+      </h1>
+     </div>
+     <!-- [/MODULE] g1h_移动端头部 -- 移动端显示的平台logo和标题 -->
+     <!-- [MODULE] h2j_登录表单卡片 -->
+     <div class="bg-white rounded-2xl shadow-card material-border p-6 md:p-8 transition-shadow duration-300 hover:shadow-card-hover">
+      <div class="text-center mb-8">
+       <h2 class="text-[clamp(1.5rem,3vw,2rem)] font-bold text-text-primary">
+        用户登录
+       </h2>
+       <p class="text-text-tertiary mt-2">
+        请输入账号密码登录系统
+       </p>
+      </div>
+      <!-- [MODULE] i3k_登录表单 -->
+      <form class="space-y-5" id="loginForm">
+       <!-- 用户名输入框 -->
+       <div class="space-y-2">
+        <label class="block text-sm font-medium text-text-secondary" for="username">
+         用户名
+        </label>
+        <div class="relative">
+         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <i class="fas fa-user text-text-tertiary">
+          </i>
+         </div>
+         <input class="w-full pl-10 pr-4 py-3 rounded-lg border border-neutral-dark focus:outline-none focus:input-focus transition-all duration-200" id="username" name="username" placeholder="请输入用户名" required="" type="text"/>
+        </div>
+       </div>
+       <!-- 密码输入框 -->
+       <div class="space-y-2">
+        <div class="flex justify-between items-center">
+         <label class="block text-sm font-medium text-text-secondary" for="password">
+          密码
+         </label>
+         <a class="text-sm text-primary hover:text-secondary transition-colors" href="javascript:void(0);">
+          忘记密码?
+         </a>
+        </div>
+        <div class="relative">
+         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <i class="fas fa-lock text-text-tertiary">
+          </i>
+         </div>
+         <input class="w-full pl-10 pr-10 py-3 rounded-lg border border-neutral-dark focus:outline-none focus:input-focus transition-all duration-200" id="password" name="password" placeholder="请输入密码" required="" type="password"/>
+         <button class="absolute inset-y-0 right-0 pr-3 flex items-center text-text-tertiary hover:text-primary transition-colors" id="togglePassword" type="button">
+          <i class="fas fa-eye-slash">
+          </i>
+         </button>
+        </div>
+       </div>
+       <!-- 记住密码 -->
+       <div class="flex items-center">
+        <input class="w-4 h-4 text-primary focus:ring-primary border-neutral-dark rounded" id="remember" name="remember" type="checkbox"/>
+        <label class="ml-2 block text-sm text-text-secondary" for="remember">
+         记住我
+        </label>
+       </div>
+       <!-- 登录按钮 -->
+       <button class="w-full bg-primary hover:bg-secondary text-white font-medium py-3 px-4 rounded-lg transition-colors duration-300 btn-hover flex items-center justify-center" type="submit">
+        <span>
+         登录
+        </span>
+        <i class="fas fa-arrow-right ml-2">
+        </i>
+       </button>
+      </form>
+      <!-- [/MODULE] i3k_登录表单 -- 包含用户名、密码输入框及登录按钮 -->
+      <!-- 分隔线 -->
+      <div class="relative my-6">
+       <div class="absolute inset-0 flex items-center">
+        <div class="w-full border-t border-neutral-dark">
+        </div>
+       </div>
+       <div class="relative flex justify-center text-xs uppercase">
+        <span class="bg-white px-2 text-text-tertiary">
+         其他登录方式
+        </span>
+       </div>
+      </div>
+      <!-- [MODULE] j4l_其他登录方式 -->
+      <div class="grid grid-cols-3 gap-4">
+       <button class="flex items-center justify-center py-2 border border-neutral-dark rounded-lg hover:bg-neutral transition-colors duration-200">
+        <i class="fab fa-github text-text-secondary text-xl">
+        </i>
+       </button>
+       <button class="flex items-center justify-center py-2 border border-neutral-dark rounded-lg hover:bg-neutral transition-colors duration-200">
+        <i class="fab fa-qq text-text-secondary text-xl">
+        </i>
+       </button>
+       <button class="flex items-center justify-center py-2 border border-neutral-dark rounded-lg hover:bg-neutral transition-colors duration-200">
+        <i class="fab fa-weixin text-text-secondary text-xl">
+        </i>
+       </button>
+      </div>
+      <!-- [/MODULE] j4l_其他登录方式 -- 包含GitHub、QQ、微信三种第三方登录方式 -->
+     </div>
+     <!-- [/MODULE] h2j_登录表单卡片 -- 包含登录表单和其他登录方式 -->
+     <!-- [MODULE] k5m_底部版权信息 -->
+     <div class="text-center mt-8 text-text-tertiary text-sm">
+      <p>
+       © 2023 数据要素管理平台 版权所有
+      </p>
+      <div class="flex justify-center space-x-4 mt-2">
+       <a class="hover:text-primary transition-colors" href="javascript:void(0);">
+        使用条款
+       </a>
+       <a class="hover:text-primary transition-colors" href="javascript:void(0);">
+        隐私政策
+       </a>
+       <a class="hover:text-primary transition-colors" href="javascript:void(0);">
+        帮助中心
+       </a>
+      </div>
+     </div>
+     <!-- [/MODULE] k5m_底部版权信息 -- 包含版权声明和链接 -->
+    </div>
+    <!-- [/MODULE] f9g_右侧登录表单区域 -- 包含登录表单和相关信息 -->
+   </div>
+  </div>
+  <!-- [/MODULE] a7g_登录页面整体布局 -- 政务风格的用户登录界面，包含数据可视化区域和登录表单区域 -->
+  <!-- [JSMOD] l6n_图表初始化脚本 -->
+  <script id="chartScript">
+   // 页面加载完成后初始化图表
+document.addEventListener('DOMContentLoaded', function () {
+  // 图表1: 数据增长趋势
+  var chart1 = echarts.init(document.getElementById('chart1'));
+  var option1 = {
+    grid: {
+      left: '5%',
+      right: '5%',
+      bottom: '5%',
+      top: '15%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: ['1月', '2月', '3月', '4月', '5月', '6月'],
+      axisLine: {
+        lineStyle: {
+          color: 'rgba(255, 255, 255, 0.3)'
+        }
+      },
+      axisLabel: {
+        color: 'rgba(255, 255, 255, 0.7)'
+      }
+    },
+    yAxis: {
+      type: 'value',
+      axisLine: {
+        show: false
+      },
+      axisLabel: {
+        color: 'rgba(255, 255, 255, 0.7)'
+      },
+      splitLine: {
+        lineStyle: {
+          color: 'rgba(255, 255, 255, 0.1)'
+        }
+      }
+    },
+    series: [{
+      data: [120, 190, 130, 240, 210, 320],
+      type: 'line',
+      smooth: true,
+      lineStyle: {
+        color: '#36BFFA',
+        width: 3
+      },
+      areaStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+          offset: 0,
+          color: 'rgba(54, 191, 250, 0.5)'
+        }, {
+          offset: 1,
+          color: 'rgba(54, 191, 250, 0.0)'
+        }])
+      },
+      symbol: 'circle',
+      symbolSize: 6,
+      itemStyle: {
+        color: '#fff'
+      }
+    }]
+  };
+  chart1.setOption(option1);
+  // 图表2: 数据类型占比
+  var chart2 = echarts.init(document.getElementById('chart2'));
+  var option2 = {
+    tooltip: {
+      trigger: 'item',
+      formatter: '{a} <br/>{b}: {c} ({d}%)'
+    },
+    legend: {
+      bottom: 0,
+      left: 'center',
+      textStyle: {
+        color: 'rgba(255, 255, 255, 0.7)',
+        fontSize: 12
+      }
+    },
+    series: [{
+      name: '数据类型',
+      type: 'pie',
+      radius: ['40%', '70%'],
+      avoidLabelOverlap: false,
+      itemStyle: {
+        borderRadius: 4,
+        borderColor: 'rgba(255, 255, 255, 0.1)',
+        borderWidth: 2
+      },
+      label: {
+        show: false,
+        position: 'center'
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: 14,
+          color: '#fff',
+          fontWeight: 'bold'
+        }
+      },
+      labelLine: {
+        show: false
+      },
+      data: [{
+        value: 35,
+        name: '结构化',
+        itemStyle: {
+          color: '#36BFFA'
+        }
+      }, {
+        value: 25,
+        name: '非结构化',
+        itemStyle: {
+          color: '#722ED1'
+        }
+      }, {
+        value: 20,
+        name: '半结构化',
+        itemStyle: {
+          color: '#FF7D00'
+        }
+      }, {
+        value: 15,
+        name: '实时流',
+        itemStyle: {
+          color: '#00B42A'
+        }
+      }, {
+        value: 5,
+        name: '其他',
+        itemStyle: {
+          color: '#86909C'
+        }
+      }]
+    }]
+  };
+  chart2.setOption(option2);
+  // 监听窗口大小变化，调整图表尺寸
+  window.addEventListener('resize', function () {
+    chart1.resize();
+    chart2.resize();
+  });
+});
+  </script>
+  <!-- [/JSMOD] l6n_图表初始化脚本 -->
+  <!-- [JSMOD] m7o_登录表单交互脚本 -->
+  <script id="loginScript">
+   document.addEventListener('DOMContentLoaded', function () {
+  // 获取DOM元素
+  var loginForm = document.getElementById('loginForm');
+  var usernameInput = document.getElementById('username');
+  var passwordInput = document.getElementById('password');
+  var togglePassword = document.getElementById('togglePassword');
+
+  // 密码显示/隐藏切换
+  togglePassword.addEventListener('click', function () {
+    var type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+
+    // 切换图标
+    var icon = togglePassword.querySelector('i');
+    if (type === 'password') {
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  });
+
+  // 表单提交处理
+  loginForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    // 获取表单数据
+    var username = usernameInput.value.trim();
+    var password = passwordInput.value.trim();
+
+    // 简单表单验证
+    if (!username) {
+      alert('请输入用户名');
+      usernameInput.focus();
+      return;
+    }
+    if (!password) {
+      alert('请输入密码');
+      passwordInput.focus();
+      return;
+    }
+
+    // 模拟登录请求
+    var submitButton = loginForm.querySelector('button[type="submit"]');
+    var originalText = submitButton.innerHTML;
+
+    // 显示加载状态
+    submitButton.disabled = true;
+    submitButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> 登录中...';
+
+    // 模拟API请求延迟
+    setTimeout(function () {
+      // 模拟登录成功
+      alert('登录成功！即将跳转到系统首页');
+
+      // 恢复按钮状态
+      submitButton.disabled = false;
+      submitButton.innerHTML = originalText;
+
+      // 实际应用中这里会跳转到首页
+      // window.location.href = '/dashboard';
+    }, 1500);
+  });
+
+  // 输入框获取焦点时添加动画效果
+  var inputs = [usernameInput, passwordInput];
+  inputs.forEach(function (input) {
+    input.addEventListener('focus', function () {
+      var parentDiv = input.parentElement;
+      parentDiv.classList.add('scale-[1.01]');
+      parentDiv.style.transition = 'transform 0.2s ease';
+    });
+    input.addEventListener('blur', function () {
+      var parentDiv = input.parentElement;
+      parentDiv.classList.remove('scale-[1.01]');
+    });
+  });
+});
+  </script>
+  <!-- [/JSMOD] m7o_登录表单交互脚本 -->
+ </body>
+</html>
