@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}管理控制台{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="page-title">管理控制台</h1>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">系统概览</div>
+                <div class="layui-card-body">
+                    <p>欢迎, {{ current_user.username }}!</p>
+                    <p>您正在使用管理员权限访问系统。</p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">用户管理</div>
+                <div class="layui-card-body">
+                    <p>管理系统用户账户</p>
+                    <a href="{{ url_for('admin.users') }}" class="layui-btn layui-btn-sm layui-btn-primary">查看用户</a>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">内容管理</div>
+                <div class="layui-card-body">
+                    <p>管理系统内容</p>
+                    <a href="#" class="layui-btn layui-btn-sm layui-btn-primary">查看内容</a>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">角色管理</div>
+                <div class="layui-card-body">
+                    <p>管理用户角色权限</p>
+                    <a href="#" class="layui-btn layui-btn-sm layui-btn-primary">设置角色</a>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-header">系统设置</div>
+                <div class="layui-card-body">
+                    <p>配置系统参数</p>
+                    <a href="{{ url_for('admin.settings') }}" class="layui-btn layui-btn-sm layui-btn-primary">系统设置</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

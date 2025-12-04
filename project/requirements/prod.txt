@@ -1,0 +1,18 @@
+# requirements/prod.txt
+
+# Web框架
+flask>=2.3.0
+
+# 数据库
+flask-sqlalchemy>=3.0.0
+flask-migrate>=4.0.0
+
+# 认证
+flask-login>=0.6.0
+werkzeug>=2.3.0
+
+# 环境变量
+python-dotenv>=1.0.0
+
+# 生产服务器
+gunicorn>=20.0.0

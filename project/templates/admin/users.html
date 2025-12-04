@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}用户管理{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="page-title">用户管理</h1>
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <div class="layui-btn-group">
+                    <a href="{{ url_for('admin.add_user') }}" class="layui-btn layui-btn-sm layui-btn-primary">
+                        <i class="layui-icon"></i> 添加用户
+                    </a>
+                </div>
+            </div>
+            <div class="layui-card-body">
+                <table class="layui-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>用户名</th>
+                            <th>邮箱</th>
+                            <th>角色</th>
+                            <th>注册时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if user.role == 'admin' %}
+                                <span class="layui-badge layui-bg-red">管理员</span>
+                                {% else %}
+                                <span class="layui-badge">普通用户</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            <td>
+                                <div class="layui-btn-group">
+                                    <a href="{{ url_for('admin.edit_user', user_id=user.id) }}" class="layui-btn layui-btn-sm layui-btn-primary">编辑</a>
+                                    <a href="{{ url_for('admin.delete_user', user_id=user.id) }}" class="layui-btn layui-btn-sm layui-btn-danger" onclick="return confirm('确认要删除该用户吗？');">删除</a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

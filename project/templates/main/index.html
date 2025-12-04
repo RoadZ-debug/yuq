@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}首页{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1>欢迎来到{{ settings.app_name }}</h1>
+    <p>这是项目的首页内容。</p>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2>新闻搜索</h2>
+                </div>
+                <div class="card-body">
+                    <form id="news-search-form">
+                        <div class="form-group">
+                            <label for="keyword">搜索关键字</label>
+                            <input type="text" class="form-control" id="keyword" placeholder="请输入搜索关键字" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="page">页码</label>
+                            <input type="number" class="form-control" id="page" value="1" min="1">
+                        </div>
+                        <button type="submit" class="btn btn-primary">搜索新闻</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="loading" class="alert alert-info" style="display: none;">
+                正在抓取新闻...
+            </div>
+
+            <div id="news-results">
+                <!-- 新闻结果将显示在这里 -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 直接执行新闻搜索功能，无需登录
+    const newsSearchForm = document.getElementById('news-search-form');
+    newsSearchForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const keyword = document.getElementById('keyword').value;
+        const page = document.getElementById('page').value;
+        const loading = document.getElementById('loading');
+        const newsResults = document.getElementById('news-results');
+        
+        // 显示加载提示
+        loading.style.display = 'block';
+        newsResults.innerHTML = '';
+        
+        // 调用API获取新闻
+        fetch(`/scraper/news?keyword=${encodeURIComponent(keyword)}&page=${page}`)
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = 'none';
+                
+                if (data.success) {
+                    if (data.total === 0) {
+                        newsResults.innerHTML = '<div class="alert alert-warning">没有找到相关新闻</div>';
+                    } else {
+                        newsResults.innerHTML = `<div class="alert alert-success">共找到 ${data.total} 条新闻</div>`;
+                        
+                        const newsList = document.createElement('div');
+                        newsList.className = 'list-group';
+                        
+                        data.data.forEach(news => {
+                            const newsItem = document.createElement('div');
+                            newsItem.className = 'list-group-item list-group-item-action';
+                            newsItem.innerHTML = `
+                                <h5 class="mb-1">
+                                    <a href="${news.url}" target="_blank" rel="noopener noreferrer">${news.title}</a>
+                                </h5>
+                                <p class="mb-1">${news.summary}</p>
+                                <small class="text-muted">来源: ${news.source}</small>
+                            `;
+                            newsList.appendChild(newsItem);
+                        });
+                        
+                        newsResults.appendChild(newsList);
+                    }
+                } else {
+                    newsResults.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
+                }
+            })
+            .catch(error => {
+                loading.style.display = 'none';
+                newsResults.innerHTML = '<div class="alert alert-danger">抓取失败，请稍后重试</div>';
+                console.error('Error:', error);
+            });
+    });
+</script>
+{% endblock %}

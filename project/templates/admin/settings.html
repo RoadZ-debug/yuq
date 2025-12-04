@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}系统设置{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="page-title">系统设置</h1>
+        <div class="layui-card">
+            <div class="layui-card-header">基本设置</div>
+            <div class="layui-card-body">
+                <form class="layui-form" method="POST" action="{{ url_for('admin.settings') }}" enctype="multipart/form-data">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">应用名称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="app_name" value="{{ settings.app_name }}" required lay-verify="required" placeholder="请输入应用名称" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">当前LOGO</label>
+                        <div class="layui-input-block">
+                            {% if settings.logo_url %}
+                            <img src="{{ url_for('static', filename=settings.logo_url) }}" alt="当前LOGO" style="max-width: 200px; max-height: 100px;">
+                            {% else %}
+                            <span class="layui-text">未设置LOGO</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">上传新LOGO</label>
+                        <div class="layui-input-block">
+                            <input type="file" name="logo" lay-verify="file" accept="image/*" class="layui-upload-file">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="formDemo">保存设置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+
+        // 监听提交
+        form.on('submit(formDemo)', function(data){
+            console.log('设置表单提交', data.field);
+            return true;
+        });
+    });
+</script>
+{% endblock %}

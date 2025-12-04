@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}用户仪表盘{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="page-title">用户仪表盘</h1>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md8">
+                <div class="layui-card">
+                    <div class="layui-card-header">欢迎, {{ current_user.username }}!</div>
+                    <div class="layui-card-body">
+                        <p>这是您的个人仪表盘，您可以在这里查看数据统计和最新的通知。</p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md4">
+                <div class="layui-card">
+                    <div class="layui-card-header">用户信息</div>
+                    <div class="layui-card-body">
+                        <p><strong>用户名:</strong> {{ current_user.username }}</p>
+                        <p><strong>邮箱:</strong> {{ current_user.email }}</p>
+                        <p><strong>角色:</strong> {{ current_user.role }}</p>
+                        <p><strong>注册时间:</strong> {{ current_user.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

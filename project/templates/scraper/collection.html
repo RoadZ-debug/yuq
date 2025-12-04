@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}数据采集管理{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2>数据采集管理</h2>
+        <p>在此输入采集关键字或需求，系统将自动爬取相关数据。</p>
+        
+        <div class="card mt-4">
+            <div class="card-body">
+                <form id="collectionForm">
+                    <div class="form-group">
+                        <label for="keyword">采集关键字/需求</label>
+                        <input type="text" class="form-control" id="keyword" name="keyword" placeholder="请输入要采集的关键字，例如：科技、人工智能" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3" id="collectBtn">开始采集</button>
+                </form>
+                
+                <!-- 进度显示区域 -->
+                <div id="progressArea" class="mt-4 d-none">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5>采集进度</h5>
+                            <div class="progress mt-3">
+                                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                            </div>
+                            <div class="mt-2">
+                                <p id="progressText">准备开始采集...</p>
+                                <p id="progressDetails">状态：等待中</p>
+                            </div>
+                            <div class="mt-3">
+                                <button type="button" class="btn btn-secondary" id="viewResultsBtn" disabled>查看采集结果</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const collectionForm = document.getElementById('collectionForm');
+            const collectBtn = document.getElementById('collectBtn');
+            const progressArea = document.getElementById('progressArea');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const progressDetails = document.getElementById('progressDetails');
+            const viewResultsBtn = document.getElementById('viewResultsBtn');
+            let taskId = null;
+            let progressInterval = null;
+            
+            // 开始采集
+            collectionForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const keyword = document.getElementById('keyword').value.trim();
+                if (!keyword) {
+                    alert('请输入采集关键字');
+                    return;
+                }
+                
+                // 禁用按钮
+                collectBtn.disabled = true;
+                collectBtn.innerHTML = '正在提交...';
+                
+                // 发送请求
+                fetch('/scraper/collection/start', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({ keyword: keyword })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        taskId = data.task_id;
+                        
+                        // 显示进度区域
+                        progressArea.classList.remove('d-none');
+                        
+                        // 开始轮询进度
+                        startProgressPolling();
+                    } else {
+                        alert('采集任务创建失败：' + data.message);
+                        collectBtn.disabled = false;
+                        collectBtn.innerHTML = '开始采集';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('采集任务创建失败，请稍后重试');
+                    collectBtn.disabled = false;
+                    collectBtn.innerHTML = '开始采集';
+                });
+            });
+            
+            // 开始轮询进度
+            function startProgressPolling() {
+                if (progressInterval) {
+                    clearInterval(progressInterval);
+                }
+                
+                progressInterval = setInterval(() => {
+                    fetch(`/scraper/collection/progress/${taskId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // 更新进度
+                            const progress = data.progress;
+                            progressBar.style.width = `${progress}%`;
+                            progressBar.setAttribute('aria-valuenow', progress);
+                            progressBar.textContent = `${progress}%`;
+                            
+                            // 更新文本
+                            progressText.textContent = `正在采集数据 (${data.collected_items}/${data.total_items}条)`;
+                            progressDetails.textContent = `状态：${getStatusText(data.status)}`;
+                            
+                            // 处理完成状态
+                            if (data.status === 'completed' || data.status === 'failed') {
+                                clearInterval(progressInterval);
+                                collectBtn.disabled = false;
+                                collectBtn.innerHTML = '开始采集';
+                                
+                                if (data.status === 'completed') {
+                                    progressDetails.textContent = '状态：采集完成';
+                                    viewResultsBtn.disabled = false;
+                                    viewResultsBtn.addEventListener('click', function() {
+                                        window.location.href = `/scraper/collection/results/${taskId}`;
+                                    });
+                                } else {
+                                    progressDetails.textContent = '状态：采集失败';
+                                    alert('数据采集失败，请稍后重试');
+                                }
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error getting progress:', error);
+                        clearInterval(progressInterval);
+                        alert('获取采集进度失败，请稍后重试');
+                    });
+                }, 1000);
+            }
+            
+            // 状态文本转换
+            function getStatusText(status) {
+                const statusMap = {
+                    'pending': '等待中',
+                    'running': '采集进行中',
+                    'completed': '采集完成',
+                    'failed': '采集失败'
+                };
+                return statusMap[status] || status;
+            }
+        });
+    </script>
+{% endblock %}

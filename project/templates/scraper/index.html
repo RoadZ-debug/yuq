@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}数据抓取{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1>数据抓取模块</h1>
+    <p>用于从百度新闻接口爬取自定义关键字的新闻数据</p>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <!-- 数据抓取表单 -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2>新闻数据抓取</h2>
+                </div>
+                <div class="card-body">
+                    <form id="news-search-form">
+                        <div class="form-group">
+                            <label for="keyword">搜索关键字</label>
+                            <input type="text" class="form-control" id="keyword" placeholder="请输入搜索关键字" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="page">页码</label>
+                            <input type="number" class="form-control" id="page" value="1" min="1">
+                        </div>
+                        <button type="submit" class="btn btn-primary">开始抓取</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 加载提示 -->
+            <div id="loading" class="alert alert-info" style="display: none;">
+                <strong>正在抓取数据...</strong>
+            </div>
+
+            <!-- 错误提示 -->
+            <div id="error" class="alert alert-danger" style="display: none;">
+            </div>
+
+            <!-- 抓取结果 -->
+            <div id="news-results">
+                <!-- 结果将通过JavaScript动态加载 -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 数据抓取表单提交事件处理
+    const newsSearchForm = document.getElementById('news-search-form');
+    if (newsSearchForm) {
+        newsSearchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 获取表单数据
+            const keyword = document.getElementById('keyword').value;
+            const page = document.getElementById('page').value;
+            
+            // 清空之前的结果和提示
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('news-results').innerHTML = '';
+            
+            // 调用数据抓取API
+            fetch(`/scraper/news?keyword=${encodeURIComponent(keyword)}&page=${page}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('loading').style.display = 'none';
+                    
+                    if (data.success) {
+                        if (data.total === 0) {
+                            document.getElementById('news-results').innerHTML = '<div class="alert alert-warning">没有找到相关新闻</div>';
+                        } else {
+                            // 显示抓取结果统计
+                            const statsDiv = document.createElement('div');
+                            statsDiv.className = 'alert alert-success mb-3';
+                            statsDiv.innerHTML = `<strong>抓取成功！</strong>共找到 ${data.total} 条新闻`;
+                            document.getElementById('news-results').appendChild(statsDiv);
+                            
+                            // 显示新闻列表
+                            const newsList = document.createElement('div');
+                            newsList.className = 'list-group';
+                            
+                            data.data.forEach(news => {
+                                const newsItem = document.createElement('div');
+                                newsItem.className = 'list-group-item list-group-item-action mb-3';
+                                
+                                // 构建新闻项HTML
+                                let newsHtml = `
+                                    <h5 class="mb-1">
+                                        <a href="${news.url}" target="_blank" rel="noopener noreferrer">${news.title}</a>
+                                    </h5>
+                                `;
+                                
+                                // 添加封面图片
+                                if (news.cover) {
+                                    newsHtml += `<img src="${news.cover}" alt="${news.title}" class="img-fluid mb-2" style="max-height: 200px; object-fit: cover;">`;
+                                }
+                                
+                                // 添加摘要
+                                if (news.summary) {
+                                    newsHtml += `<p class="mb-1">${news.summary}</p>`;
+                                }
+                                
+                                // 添加来源和链接
+                                newsHtml += `
+                                    <small class="text-muted">来源: ${news.source}</small>
+                                    <br>
+                                    <small><a href="${news.url}" target="_blank" rel="noopener noreferrer">查看原文</a></small>
+                                `;
+                                
+                                newsItem.innerHTML = newsHtml;
+                                newsList.appendChild(newsItem);
+                            });
+                            
+                            document.getElementById('news-results').appendChild(newsList);
+                        }
+                    } else {
+                        // 显示错误信息
+                        document.getElementById('error').innerHTML = `<strong>抓取失败！</strong>${data.message}`;
+                        document.getElementById('error').style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('error').innerHTML = `<strong>抓取失败！</strong>网络错误，请稍后重试`;
+                    document.getElementById('error').style.display = 'block';
+                    console.error('Error:', error);
+                });
+        });
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}注册{% endblock %}
+
+{% block css %}
+<style>
+    .register-container {
+        width: 400px;
+        margin: 50px auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .register-title {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #333;
+    }
+    @media (max-width: 768px) {
+        .register-container {
+            width: 90%;
+            margin: 30px auto;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <h2 class="register-title">用户注册</h2>
+    <form class="layui-form" method="POST" action="{{ url_for('auth.register') }}">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" required lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-block">
+                <input type="email" name="email" required lay-verify="required|email" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <div class="layui-alert layui-bg-orange" style="margin: 10px 0;">
+                    <i class="layui-icon layui-icon-tips"></i>
+                    系统将为您分配默认密码：<strong>123456</strong>，请妥善保管
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="register">注册</button>
+                <a href="{{ url_for('auth.login') }}" class="layui-btn layui-btn-primary">已有账号？登录</a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+
+        // 监听表单提交
+        form.on('submit(register)', function(data){
+            console.log('注册表单提交', data.field);
+            return true;
+        });
+    });
+</script>
+{% endblock %}

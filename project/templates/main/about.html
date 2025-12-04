@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}关于我们{% endblock %}
+
+{% block content %}
+<div class="about-section">
+    <h1>关于{{ settings.app_name }}</h1>
+    <p>这是一个使用Flask框架开发的Web应用程序。</p>
+    <p>项目的主要功能包括：</p>
+    <ul>
+        <li>用户认证系统（登录、注册、权限管理）</li>
+        <li>内容管理系统</li>
+        <li>响应式设计，适配各种设备</li>
+        <li>模块化的代码结构和现代化的开发工具链</li>
+    </ul>
+    <p>本项目采用了以下技术栈：</p>
+    <ul>
+        <li>后端：Flask（Python）</li>
+        <li>数据库：SQLite（开发环境）/ MySQL（生产环境）</li>
+        <li>前端：Layui框架</li>
+        <li>ORM：SQLAlchemy</li>
+        <li>版本控制：Git</li>
+    </ul>
+</div>
+{% endblock %}

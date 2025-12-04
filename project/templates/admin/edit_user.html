@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}编辑用户{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="page-title">编辑用户</h1>
+        <div class="layui-card">
+            <div class="layui-card-header">用户信息</div>
+            <div class="layui-card-body">
+                <form class="layui-form" method="POST" action="{{ url_for('admin.edit_user', user_id=user.id) }}">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">用户名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="username" value="{{ user.username }}" required lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">邮箱</label>
+                        <div class="layui-input-block">
+                            <input type="email" name="email" value="{{ user.email }}" required lay-verify="required|email" placeholder="请输入邮箱" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">密码</label>
+                        <div class="layui-input-block">
+                            <input type="password" name="password" placeholder="输入新密码（不修改请留空）" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">角色</label>
+                        <div class="layui-input-block">
+                            <select name="role">
+                                <option value="user" {% if user.role == 'user' %}selected{% endif %}>普通用户</option>
+                                <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>管理员</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button type="submit" class="layui-btn layui-btn-primary" lay-submit lay-filter="formDemo">保存修改</button>
+                            <a href="{{ url_for('admin.users') }}" class="layui-btn layui-btn-primary">取消</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+
+        // 监听提交
+        form.on('submit(formDemo)', function(data){
+            console.log('表单数据', data.field);
+            return true;
+        });
+    });
+</script>
+{% endblock %}

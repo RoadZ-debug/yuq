@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ settings.app_name }}{% endblock %}</title>
+    <!-- 引入layui CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='layui-v2.2.5/layui/css/layui.css') }}">
+    <!-- 自定义CSS -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        .layui-header {
+            background-color: #393D49;
+        }
+        .layui-logo {
+            background-color: #23262E;
+        }
+        .layui-footer {
+            background-color: #393D49;
+            color: #fff;
+            padding: 15px 0;
+        }
+        .layui-main {
+            padding: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部导航 -->
+    <div class="layui-header">
+        <div class="layui-logo">
+            <img src="{{ url_for('static', filename=settings.logo_url) if settings.logo_url else url_for('static', filename='img/default_logo.png') }}" alt="Logo" style="height: 30px; vertical-align: middle; margin-right: 10px;">
+            {{ settings.app_name }}
+        </div>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item"><a href="{{ url_for('main.index') }}">首页</a></li>
+            <li class="layui-nav-item"><a href="{{ url_for('scraper.collection_management') }}">数据采集管理</a></li>
+            <li class="layui-nav-item"><a href="{{ url_for('main.about') }}">关于</a></li>
+        </ul>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="layui-container">
+        <div class="layui-main">
+            <!-- 消息闪现 -->
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="layui-col-xs12">
+                {% for message in messages %}
+                <div class="layui-alert layui-bg-orange" closeBtn="1">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            <!-- 页面内容 -->
+            <div class="layui-row" style="margin-top: 20px;">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <div class="layui-footer" style="text-align: center;">
+        <p>&copy; {{ settings.app_name }} {{ current_year }}</p>
+    </div>
+
+    <!-- 引入layui JavaScript -->
+    <script src="{{ url_for('static', filename='layui-v2.2.5/layui/layui.js') }}"></script>
+    <!-- 初始化layui组件 -->
+    <script>
+        layui.use('element', function(){
+            var element = layui.element;
+            // 导航菜单下拉初始化
+        });
+    </script>
+    <!-- 页面特定JavaScript -->
+    {% block js %}{% endblock %}
+</body>
+</html>

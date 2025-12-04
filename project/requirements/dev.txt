@@ -1,0 +1,23 @@
+# requirements/dev.txt
+
+# Web框架
+flask>=2.3.0
+
+# 数据库
+flask-sqlalchemy>=3.0.0
+flask-migrate>=4.0.0
+
+# 认证
+flask-login>=0.6.0
+werkzeug>=2.3.0
+
+# 环境变量
+python-dotenv>=1.0.0
+
+# 测试
+pytest>=7.0.0
+pytest-flask>=1.2.0
+
+# 开发工具
+ipython>=8.0.0
+werkzeug>=2.3.0
